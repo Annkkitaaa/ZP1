@@ -775,7 +775,12 @@ impl FastCircleFFT {
     
     /// Low-degree extension using FFT.
     pub fn extend(&self, evals: &[M31], log_extension: usize) -> Vec<M31> {
-        self.inner.extend(evals, log_extension)
+        // Recover coefficients using fast IFFT
+        let coeffs = self.ifft(evals);
+
+        // Evaluate on larger domain using fast FFT
+        let extended_fft = FastCircleFFT::new(self.log_size() + log_extension);
+        extended_fft.fft(&coeffs)
     }
     
     /// Get domain size.
