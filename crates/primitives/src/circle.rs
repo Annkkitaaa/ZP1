@@ -400,6 +400,9 @@ impl Coset {
 
 /// Circle FFT for transforming between coefficient and evaluation representations.
 ///
+/// **Note**: This is the O(n²) naive implementation. For production use, prefer
+/// `FastCircleFFT` which implements O(n log n) butterfly-based FFT.
+///
 /// # Note on Circle Polynomial Representation
 ///
 /// Standard univariate polynomials f(x) cannot be directly evaluated on circle domains
@@ -414,7 +417,7 @@ impl Coset {
 ///
 /// # Complexity
 ///
-/// - FFT: O(n²) field operations (can be O(n log n) with proper Circle FFT)
+/// - FFT: O(n²) field operations (naive evaluation at each point)
 /// - IFFT: O(n²) field operations (Lagrange interpolation)
 #[derive(Clone, Debug)]
 pub struct CircleFFT {
@@ -677,10 +680,10 @@ impl CircleTwiddles {
 /// Complexity: O(n log n) field operations for both FFT and IFFT.
 #[derive(Clone, Debug)]
 pub struct FastCircleFFT {
-    /// Delegate to proven implementation.
-    inner: CircleFFT,
-    #[allow(dead_code)]
+    /// Precomputed twiddle factors for butterfly operations.
     twiddles: CircleTwiddles,
+    /// The evaluation domain.
+    domain: CircleDomain,
 }
 
 impl FastCircleFFT {
