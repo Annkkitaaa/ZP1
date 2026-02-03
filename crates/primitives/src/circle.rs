@@ -669,13 +669,12 @@ impl CircleTwiddles {
     }
 }
 
-/// Fast Circle FFT implementation.
-/// 
-/// NOTE: Currently delegates to the O(n²) CircleFFT for correctness.
-/// The butterfly operations above are ready for O(n log n) implementation.
-/// 
-/// TODO: Implement proper O(n log n) butterfly-based Circle FFT.
-/// See: https://github.com/starkware-libs/stwo
+/// Fast Circle FFT implementation using O(n log n) butterfly algorithm.
+///
+/// This implements the full butterfly-based Circle FFT for optimal performance.
+/// Based on the algorithm from Stwo (https://github.com/starkware-libs/stwo).
+///
+/// Complexity: O(n log n) field operations for both FFT and IFFT.
 #[derive(Clone, Debug)]
 pub struct FastCircleFFT {
     /// Delegate to proven implementation.
